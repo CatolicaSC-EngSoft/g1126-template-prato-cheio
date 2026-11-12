@@ -1,6 +1,6 @@
 # Documento de Projeto — Prato Cheio
 
-*Trabalho 2 · máximo 4 páginas (fora diagramas) · entrega na Aula 10*
+*Trabalho 2 · máximo 4 páginas (fora diagramas) · entrega na Aula 9*
 
 ## Decisões de projeto
 | # | Decisão | Alternativas | Requisito/risco da Análise que a motiva |

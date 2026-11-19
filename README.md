@@ -13,38 +13,34 @@ Conecta doadores de alimentos excedentes a ONGs, antes que a comida se perca.
 
 ## Como rodar
 
-Requisito: **Node.js 22.13 ou superior**. Mais nada — o banco da Unidade 1 é SQLite, embutido no próprio Node.
+Requisito: **Node.js 22.13 ou superior** e um **PostgreSQL** acessível (o grupo decidiu, no ADR 0001, subir via Docker/contêiner local).
 
-> Esta é a **stack preferencial** da disciplina. Se o seu grupo optar por outra, registre o ADR de justificativa e garanta os mesmos compromissos: repositório público com CI verde, rota de saúde, testes por um comando, os três comandos documentados aqui no README e banco relacional migrado para PostgreSQL na Unidade 3.
+> Esta é a **stack preferencial** da disciplina. Se o seu grupo optar por outra, registre o ADR de justificativa e garanta os mesmos compromissos: repositório público com CI verde, rota de saúde, testes por um comando e os comandos abaixo documentados aqui no README.
 
 ```bash
-npm install       # só na primeira vez
-npm run db:migrar # cria o schema (arquivo dados.sqlite)
-npm start         # sobe em http://localhost:3000
-npm test          # roda os testes
-npm run dev       # sobe recarregando a cada alteração
+docker run --name pratocheio-postgres \
+  -e POSTGRES_USER=pratocheio -e POSTGRES_PASSWORD=pratocheio -e POSTGRES_DB=pratocheio \
+  -p 5432:5432 -d postgres:16-alpine
+cp .env.example .env     # só na primeira vez — já aponta DATABASE_URL para o contêiner acima
+npm install               # só na primeira vez
+npm run db:migrar         # cria o schema no banco principal
+npm run db:criar-teste    # cria o pratocheio_test, usado por npm test
+npm start                  # sobe em http://localhost:3000
+npm test                   # roda os testes contra o pratocheio_test
+npm run dev                 # sobe recarregando a cada alteração
 ```
 
-Os testes usam SQLite **em memória**, então não sujam o banco de desenvolvimento.
-
-> Ao rodar `npm test` o Node imprime `ExperimentalWarning: SQLite is an experimental feature`.
-> É esperado — o módulo embutido `node:sqlite` ainda é marcado como experimental. Não é erro e não reprova o CI.
-
-> **Atenção:** não deixe o repositório dentro de uma pasta sincronizada (OneDrive, Google Drive, Dropbox) nem em disco de rede. O SQLite precisa de trava de arquivo e nesses lugares falha com `disk I/O error`. Clone em uma pasta local comum, por exemplo `~/dev/`.
-
-## O banco: SQLite agora, PostgreSQL depois
+## O banco: PostgreSQL (migrado na Unidade 3)
 
 | Unidade | Banco | O que precisa instalar |
 |---|---|---|
-| 1 — Análise | **SQLite** (`node:sqlite`, embutido) | nada além do Node |
-| 2 — Projeto | SQLite | nada |
-| 3 — Construção | **PostgreSQL** (após refatorar) | um PostgreSQL acessível — o caminho é escolha do grupo |
+| 1 — Análise | SQLite (`node:sqlite`, embutido) — **histórico, não mais usado** | — |
+| 2 — Projeto | SQLite — **histórico, não mais usado** | — |
+| 3 — Construção | **PostgreSQL** (migração já feita, ver ADR 0001/0002) | um PostgreSQL acessível — contêiner local, instalado na máquina, ou serviço gerenciado |
 
-A troca não é acidente de percurso: na Unidade 2 vocês registram a decisão em um **ADR** (alternativas, consequências, riscos) e na Unidade 3 executam a **refatoração** — com os testes existentes provando que o comportamento se manteve.
+A troca não foi acidente de percurso: na Unidade 2 o grupo registrou a decisão em um **ADR** (alternativas, consequências, riscos) e na Unidade 3 executou a **refatoração** (`docs/refatoracoes.md`, Refatoração 1) — com os testes existentes provando que o comportamento se manteve.
 
-O `src/db.js` foi desenhado para isso: ele expõe `query()` devolvendo `{ rows }`, então a troca do banco fica contida nele e não vaza para as regras de negócio.
-
-**Como o PostgreSQL vai subir é decisão do grupo**, comparada no mesmo ADR: instalar o PostgreSQL na máquina, subir um contêiner, ou usar um serviço gerenciado gratuito (Neon, Supabase, Render). A disciplina não impõe o caminho — exige o banco alcançável por `DATABASE_URL`, o schema migrado e o CI verde. Cada opção tem custo e risco diferentes, e reconhecê-los é parte da decisão.
+O `src/db.js` foi desenhado para isso: ele expõe `query()` devolvendo `{ rows }`, então a troca do banco ficou contida nele e não vazou para as regras de negócio.
 
 ## Estrutura
 
@@ -91,15 +87,14 @@ Pronto, no nosso grupo, é:
 
 ## O que já está pronto e o que falta
 
-Pronto (Trabalho 1 — walking skeleton): história zero ponta a ponta —
-um doador publica uma doação (`src/doacoes.js` + `src/repositorio.js`) → uma ONG vê a
-doação na lista (`GET /api/doacoes`) → a ONG a aceita com exclusividade e ela sai da
-lista (`POST /api/doacoes/:id/aceitar`). Os 9 testes em `tests/doacoes.test.js` (Vitest +
-Supertest) cobrem os critérios de aceite das histórias #6, #7, #8 e da história "coletada"
-(Trabalho 2), e estão todos verdes no CI (Node 22).
-
-Falta para a próxima iteração: a Regra de Expiração do Alimento (Aula 11, veja
-`docs/analise.md` e `docs/projeto.md` > Decisão #2).
+Pronto: história zero ponta a ponta — um doador publica uma doação (`src/doacoes.js` +
+`src/repositorio.js`) → uma ONG vê a doação na lista (`GET /api/doacoes`) → a ONG a aceita
+com exclusividade e ela sai da lista (`POST /api/doacoes/:id/aceitar`) → o voluntário marca
+como coletada (`POST /api/doacoes/:id/coletar`). A Regra de Expiração do Alimento também já
+está implementada: doação com validade vencida sai da lista e não pode mais ser aceita
+(`docs/projeto.md` > Decisão #2). O banco já foi migrado de SQLite para PostgreSQL (ADR
+0001/0002, `docs/refatoracoes.md`). Os testes em `tests/doacoes.test.js` (Vitest + Supertest)
+cobrem esses critérios e estão todos verdes no CI (Node 22), rodando contra PostgreSQL real.
 
 ## Uso de IA
 

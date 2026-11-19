@@ -107,6 +107,11 @@ O problema central do Prato Cheio é que alimentos ainda próprios para consumo 
 - Dado que existe uma doação publicada e ainda não aceita, Quando uma ONG aciona "aceitar", Então a doação passa para o status "aceita" e fica associada àquela ONG.
 - Dado que existe uma doação já aceita por uma ONG, Quando uma segunda ONG tenta aceitar a mesma doação, Então o sistema recusa o aceite (erro "Doação já reservada") e a doação permanece associada à primeira ONG.
 
+**História "coletada" — Voluntário marca a doação como coletada**
+- Dado que existe uma doação aceita, Quando a ONG marca como coletada, Então o status vira "coletada".
+- Dado que uma doação já está coletada, Quando alguém tenta marcar de novo, Então o sistema recusa.
+- Dado que existe uma doação ainda disponível (não aceita), Quando alguém tenta marcar como coletada, Então o sistema recusa, pois ninguém coleta o que não foi aceito.
+
 ## Riscos
 Escala usada: alta / média / baixa.
 

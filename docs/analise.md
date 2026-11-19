@@ -112,6 +112,10 @@ O problema central do Prato Cheio é que alimentos ainda próprios para consumo 
 - Dado que uma doação já está coletada, Quando alguém tenta marcar de novo, Então o sistema recusa.
 - Dado que existe uma doação ainda disponível (não aceita), Quando alguém tenta marcar como coletada, Então o sistema recusa, pois ninguém coleta o que não foi aceito.
 
+**Regra de Expiração do Alimento — doação vencida não pode mais ser aceita**
+- Dado que uma doação está disponível e sua validade já passou, Quando alguém tenta aceitá-la, Então o sistema recusa e marca a doação como expirada.
+- Dado que existe uma doação com validade igual a hoje, Quando a lista de disponíveis é consultada, Então ela continua aparecendo (hoje ainda vale).
+
 ## Riscos
 Escala usada: alta / média / baixa.
 

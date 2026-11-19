@@ -13,6 +13,7 @@ Copie aqui os critérios de aceite do seu `docs/analise.md` e marque um por um. 
 | 5 | Dado que existe uma doação publicada e ainda não aceita, Quando uma ONG aciona "aceitar", Então a doação passa para o status "aceita" e fica associada àquela ONG. | sim | teste `marca a doação como aceita pela ONG` (`tests/doacoes.test.js`) |
 | 6 | Dado que existe uma doação já aceita por uma ONG, Quando uma segunda ONG tenta aceitar a mesma doação, Então o sistema recusa o aceite (erro "Doação já reservada") e a doação permanece associada à primeira ONG. | sim | teste `recusa aceitar uma doação que já foi aceita por outra ONG` (`tests/doacoes.test.js`) |
 | 7 | Dado que existe uma doação aceita, Quando a ONG marca como coletada, Então o status vira "coletada". | sim | teste `marca a doação aceita como coletada` (`tests/doacoes.test.js`) |
+| 8 | Dado que uma doação está disponível e sua validade já passou, Quando alguém tenta aceitá-la, Então o sistema recusa e marca a doação como expirada. | sim | teste `recusa aceitar uma doação com validade vencida` (`tests/doacoes.test.js`) |
 
 ## Critérios que não atendem — por quê
 

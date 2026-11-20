@@ -47,5 +47,4 @@ Erro tratado:
 
 ## Testado por
 
-Outro integrante executou este roteiro sem ajuda: **[nome]**, em **[data]**.
-Se ele travou em algum passo, o roteiro está incompleto — corrija antes de entregar.
+Outro integrante executou este roteiro sem ajuda: **Yuri**, em **19/11**.

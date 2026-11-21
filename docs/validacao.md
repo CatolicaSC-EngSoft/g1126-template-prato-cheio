@@ -6,18 +6,46 @@ Copie aqui os critérios de aceite do seu `docs/analise.md` e marque um por um. 
 
 | # | Critério de aceite (da Unidade 1) | Atende? | Evidência |
 |:--:|---|:--:|---|
-| 1 |  | sim / parcial / não | teste, demo, execução do CI |
-| 2 |  |  |  |
-| 3 |  |  |  |
+| 1 | **História 1 · Critério 1 - Cadastro com informações obrigatórias.** **Dado** que o doador possui uma doação com tipo de alimento, quantidade e validade informados, **Quando** confirmar o cadastro da doação, **Então** a doação deve ser registrada com essas informações. | atende | `tests/cadastro.test.js` : "registra a doação com tipo, quantidade e validade informados" - CI verde |
+| 2 | **História 1 · Critério 2 - Tentativa de cadastro com informações incompletas.** **Dado** que o doador está realizando o cadastro de uma doação, **Quando** tentar confirmar o cadastro sem informar o tipo de alimento, a quantidade ou a validade, **Então** o sistema deve informar que os dados obrigatórios precisam ser preenchidos. | atende | `tests/cadastro.test.js` : "recusa cadastro sem quantidade e avisa que os campos são obrigatórios" e "recusa tipo preenchido só com espaços como campo obrigatório vazio" - `tests/doacoes.test.js` : "recusa doação sem os campos obrigatórios" - CI verde |
+| 3 | **História 1 · Critério 3 - Validade inválida.** **Dado** que o doador está cadastrando uma doação, **Quando** informar uma data de validade anterior ou igual à data atual, **Então** o sistema deve informar que a validade precisa ser futura para concluir o cadastro. | atende | `tests/cadastro.test.js` : "recusa cadastrar doação com validade anterior a hoje", "recusa cadastrar doação com validade igual a hoje" e "aceita cadastrar doação com validade de amanhã" - CI verde |
+| 4 | **História 1 · Fatia 1 - O cadastro recusa validade de hoje ou anterior (RN13).** **Dado** que o doador está cadastrando uma doação, **quando** informa uma validade anterior ou igual a hoje, **então** o sistema recusa com "a validade precisa ser uma data futura" e a doação não aparece para as ONGs. | atende | `tests/cadastro.test.js` : "recusa cadastrar doação com validade anterior a hoje" e "recusa cadastrar doação com validade igual a hoje" (conferem a mensagem exata e a lista vazia) -  CI verde |
+| 5 | **História 1 · Fatia 2 - O formulário do doador não oferece hoje nem datas passadas no calendário.** **Dado** que o doador abre o formulário de nova doação, **quando** escolhe a validade, **então** o primeiro dia que o campo aceita é amanhã. | não atende | `public/doador.html`: o `<input id="validade" type="date">` não tem `min` - o calendário oferece qualquer data e a recusa só vem da API |
+| 6 | **História 1 · Fatia 3 - A recusa por campo vazio diz qual campo falta.** **Dado** que o doador deixa a quantidade em branco, **quando** confirma o cadastro, **então** o sistema recusa e a mensagem nomeia "quantidade". | parcial | `tests/cadastro.test.js` : "recusa cadastro sem quantidade e avisa que os campos são obrigatórios": a mensagem é sempre "tipo, quantidade e validade são obrigatórios" |
+| 7 | **História 3 · Critério 1 - Exibição de doações disponíveis.** **Dado** que existem doações cadastradas, disponíveis e dentro da validade ou janela de retirada, **Quando** o representante da ONG acessar a área de doações, **Então** o sistema deve exibir as doações disponíveis. | atende | `tests/doacoes.test.js` : "mostra a doação publicada na lista de disponíveis" - tela `public/ong.html` - CI verde |
+| 8 | **História 3 · Critério 2 - Não exibição de doações indisponíveis.** **Dado** que existe uma doação aceita por outra ONG ou com prazo de retirada expirado, **Quando** o representante da ONG visualizar as doações disponíveis, **Então** essa doação não deve ser exibida como disponível. | parcial | Aceita: `tests/doacoes.test.js` : "remove a doação da lista de disponíveis depois de aceita". Cancelada: `tests/cancelamento.test.js` : "cancela doação disponível e a tira da lista". Expirada: continua na lista (`listarDisponiveis` em `src/repositorio.js` filtra só por status) - o aceite é recusado em "recusa aceitar uma doação fora da validade" |
+| 9 | **História 3 · Critério 3 - Informações exibidas.** **Dado** que existe uma doação disponível, **Quando** o representante da ONG visualizar a doação, **Então** deve conseguir identificar o tipo de alimento, a quantidade e a validade ou janela de retirada. | atende | `public/ong.html` mostra cada item como "tipo — quantidade (até validade)"; a API devolve os três campos, conferidos em "registra a doação com tipo, quantidade e validade informados"; CI verde |
+| 10 | **História 4 ★ · Critério 1 - Aceite de uma doação disponível.** **Dado** que existe uma doação disponível e dentro da validade ou janela de retirada, **Quando** o representante da ONG confirmar o aceite da doação, **Então** a doação deve ser reservada para essa ONG. | atende | `tests/doacoes.test.js` : "marca a doação como aceita pela ONG" - CI verde |
+| 11 | **História 4 ★ · Critério 2 - Exclusividade da doação.** **Dado** que uma doação já foi aceita por uma ONG, **Quando** outra ONG tentar aceitar essa mesma doação, **Então** o sistema deve informar que a doação não está mais disponível. | atende | `tests/doacoes.test.js` : "recusa aceitar uma doação que já foi aceita por outra ONG" - o `UPDATE ... AND status = 'disponivel'` em `src/repositorio.js` cobre dois aceites simultâneos - CI verde |
+| 12 | **História 4 ★ · Critério 3 - Doação aceita deixa de estar disponível.** **Dado** que uma ONG aceitou uma doação disponível, **Quando** outra ONG acessar a lista de doações disponíveis, **Então** a doação aceita não deve aparecer como disponível para novo aceite. | atende | `tests/doacoes.test.js` : "remove a doação da lista de disponíveis depois de aceita" - CI verde |
 
-## Critérios que não atendem — por quê
+## Critérios que não atendem - por quê
 
-(Para cada "parcial" ou "não": o que falta, por que ficou de fora e o que seria necessário.)
+**#5 - Fatia 2 da História 1 - não atende.**
+- O que funciona: a regra está garantida no servidor. Validade de hoje ou anterior é recusada pela API com "a validade precisa ser uma data futura", e o formulário mostra essa mensagem.
+- O que falta: o atributo `min` no campo de validade de `public/doador.html`, preenchido com a data de amanhã no fuso de Brasília, e um teste que confira esse valor.
+- Por que ficou de fora: a iteração priorizou a regra no servidor (fatia 1) e a migração para PostgreSQL. A fatia 2 é só melhoria de interface: sem ela a regra continua valendo, o doador só descobre o erro depois de enviar.
+
+**#6 - Fatia 3 da História 1 (mensagem nomeia o campo que falta) - parcial.**
+- O que funciona: o cadastro sem quantidade é recusado com 400, nada é gravado e a mensagem contém a palavra "quantidade".
+- O que falta: a mensagem cita sempre os três campos, então não diz qual deles ficou vazio. Falta montar a mensagem só com os campos ausentes (por exemplo "quantidade é obrigatória") e ajustar o teste para esperar esse texto.
+- Por que ficou de fora: o teste da fatia 1 e o do critério 2 dependem do texto atual. Mudar a mensagem pede mexer nos dois juntos, e a iteração foi fechada sem essa mudança.
+
+**#8 - História 3, Critério 2 (doação expirada não aparece) — parcial.**
+- O que funciona: doação aceita ou cancelada sai da lista, e uma doação vencida não pode ser aceita ("doação fora da validade").
+- O que falta: uma doação que venceu depois de publicada ainda aparece na lista das ONGs. Falta filtrar `validade >= hoje` em `listarDisponiveis` (ou marcar como expirada, RN07 e RN14) e um teste "não lista doação com validade vencida".
+- Por que ficou de fora: o cadastro já impede validade passada, e o caso só aparece com o passar dos dias. O grupo cobriu primeiro o aceite, que é onde a doação vencida causaria dano, e deixou a lista para depois.
 
 ## Mudanças de critério ao longo do semestre
 
-(Algum critério da Unidade 1 se mostrou errado ou impossível? Qual, e o que aprenderam com isso.)
+- **"Validade ou janela de retirada" virou um campo só.** Os critérios da Unidade 1 tratam validade e janela de retirada como alternativas. O produto guarda uma única data (`validade`, rotulada "Validade / retirar até" no formulário) e a usa para as duas coisas. Aprendemos que separar os dois conceitos exige decidir antes qual deles manda na expiração - isso ficou para depois do piloto.
+- **"Dentro da validade" tem limites diferentes no cadastro e no aceite.** No cadastro, hoje não é aceito (RN13 pede validade futura). No aceite, a doação que vence hoje ainda pode ser reservada, porque só é recusada se `validade < hoje`. Os testes de limite deixaram isso explícito - o critério da Unidade 1 não dizia qual era o caso de "igual a hoje".
+- **A História 1 entrou, apesar de a História Zero tê-la deixado fora.** A análise excluía o cadastro de novas doações da fatia inicial, mas o fluxo ponta a ponta precisava de uma forma de criar doações. O cadastro mínimo foi feito no walking skeleton e ganhou critérios e fatias próprios na Unidade 3.
+- **O formato da validade ficou mais estrito.** Os testes de limite mostraram que a validade comparada como texto aceitava "31/12/2099" e "2099-02-30". O critério passou a exigir uma data real em `AAAA-MM-DD` ("recusa validade fora do formato AAAA-MM-DD" e "recusa validade com data que não existe, como 30 de fevereiro").
+- **Não verificáveis:** nenhum dos critérios das Histórias 1, 3 e 4. Os objetivos de impacto e as hipóteses da análise (tempo de coleta, adesão de doadores) só podem ser medidos no piloto e não entram neste quadro.
 
 ## Uso de IA
 
-(O que foi gerado com IA nesta iteração, o que vocês verificaram e o que alteraram.)
+A IA foi utilizada como ferramenta de apoio durante a iteração, auxiliando na análise dos requisitos, na identificação de possíveis inconsistências entre os critérios de aceite e a implementação e na revisão das evidências de validação.
+
+As sugestões foram avaliadas pelo grupo, que ficou responsável por conferir os testes, verificar o comportamento do sistema e definir os status finais dos critérios. As respostas da IA não foram consideradas evidências de funcionamento.

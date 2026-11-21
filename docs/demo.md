@@ -4,28 +4,47 @@
 
 ## Antes de começar
 
+Requisitos:
+- URL do banco supabase no arquivo .env
+- Caso queira executar testes, é necessário postgre local
+
+comandos necessários:
+
 ```bash
+git clone https://github.com/Lucas-Leal-Oliveira05/PratoCheio.git
+cd PratoCheio
 npm install
-npm run db:migrar
 npm start
 ```
+após estes comandos em sequencia, acessar http://localhost:3000
+(para executar teste, comando "run db:migrar", em seguida "npm test")
 
 ## Roteiro (3 minutos)
 
 | Tempo | O que mostrar | O que se prova |
 |---|---|---|
-| 0:00–0:20 | O problema em uma frase | por que o produto existe |
-| 0:20–1:50 | A história funcionando de verdade | o produto executa ponta a ponta |
-| 1:50–2:30 | Um caso de erro tratado | o limite foi pensado |
-| 2:30–3:00 | O que falta e por quê | vocês sabem onde estão |
+| 0:00–0:20 | estabelecimentos têm alimentos sobrando que podem ser perdidos, enquanto ONGs necessitam de comida para suas ações. | o por que de o produto existir |
+| 0:20–1:50 |  Publicar uma doação como estabelecimento e reservá-la como ONG. Mostrar que ela sai da lista de disponíveis. | A história principal funciona ponta a ponta e os dados persistem no banco. |
+| 1:50–2:30 | Tentar publicar uma doação sem preencher a quantidade. | O sistema valida campos obrigatórios e apresenta uma mensagem de erro em vez de cadastrar dados incompletos. |
+| 2:30–3:00 | Mostrar o histórico de doações aceitas para maior controle e visibilidade para vigilância. | que o grupo conhece o estado atual, os limites e as necessidades do produto. |
 
 ## Passo a passo reproduzível
 
-1. (ação exata: o que clicar ou qual requisição fazer)
-2. (o que deve acontecer)
-3. …
+1. Acessar localhost:3000 / Deve carregar a página
+2. Clicar em "Sou um estabelecimento" / Envia o usuário para o crud de doações
+3. Preencha os todos os campos (tipo de alimento -> Sopa // Quantidade -> 10) e insira uma data necessariamente futura para validade e retirada / Todos os campos ficam preenchidos
+4. Clique em "Publicar doação" // caso preenchido corretamente, uma doação será criada com as informações inseridas nos campos e aparecerá como disponível
+5. Volte para a página inicial
+6. CLique em "Sou uma ONG" // envia para a página para a ONGs
+7. Preencher campo nome da ONG // Campo fica preenchido
+8. Na doação disponível, clique em "Reservar coleta" // Registra doação como reservada para a ONG cujo nome estava preenchido no campo e retira da lista de disponíveis
+
+Erro tratado:
+1.Volte para a página inicial
+2. Clique em "Sou um estabelecimento" // envia para página de crud de doações
+3. preencha os campos da doação (tipo de alimento -> feijoada // quantidade -> deixe vazio) e preencha a data com valor necessariamente futuro // os campos ficam preenchidos, menos quantidade
+4. Clique em "Publicar doação" // cadastro é recusado e aparece um erro: "tipo, quantidade e validade são obrigatórios"
 
 ## Testado por
 
-Outro integrante executou este roteiro sem ajuda: **[nome]**, em **[data]**.
-Se ele travou em algum passo, o roteiro está incompleto — corrija antes de entregar.
+Outro integrante executou este roteiro sem ajuda: **Yuri**, em **19/11**.

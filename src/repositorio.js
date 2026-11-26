@@ -4,6 +4,7 @@ import { query } from './db.js';
 const STATUS = {
   DISPONIVEL: 'disponivel',
   ACEITA: 'aceita',
+  COLETADA: 'coletada',
   CANCELADA: 'cancelada'
 }
 // Insere a doação e devolve a linha criada.
@@ -71,9 +72,24 @@ export async function listarAceitas() {
   return rows;
 }
 
+export async function confirmarColeta(id, voluntario) {
+  const { rows } = await query(
+    `UPDATE doacoes
+     SET status = '${STATUS.COLETADA}',
+         voluntario = $1,
+         coletada_em = NOW()
+     WHERE id = $2
+       AND status = '${STATUS.ACEITA}'
+     RETURNING *`,
+    [voluntario, Number(id)]
+  );
+
+  return rows[0];
+}
+
 export async function listarDoDoador(doador) {
   const { rows } = await query(
-    `SELECT id, tipo, quantidade, validade, status, ong, doador, criada_em, aceita_em
+    `SELECT id, tipo, quantidade, validade, status, ong, doador, criada_em, aceita_em, coletada_em
      FROM doacoes
      WHERE lower(doador) = lower($1)
      ORDER BY criada_em DESC, id DESC`,

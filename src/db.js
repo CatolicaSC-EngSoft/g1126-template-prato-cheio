@@ -154,6 +154,12 @@ export async function migrar() {
       ADD COLUMN IF NOT EXISTS doador TEXT
     `);
 
+    await banco.query(`
+      ALTER TABLE doacoes
+      ADD COLUMN IF NOT EXISTS voluntario TEXT,
+      ADD COLUMN IF NOT EXISTS coletada_em TIMESTAMPTZ
+    `);
+
     // Doações publicadas antes do H1 (decisão 6 do docs/projeto.md).
     await banco.query(`
       UPDATE doacoes
@@ -176,7 +182,9 @@ export async function migrar() {
       ong TEXT,
       criada_em TEXT NOT NULL DEFAULT (datetime('now')),
       aceita_em TEXT,
-      doador TEXT
+      doador TEXT,
+      voluntario TEXT,
+      coletada_em TEXT
     )
   `);
 }

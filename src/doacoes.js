@@ -87,6 +87,34 @@ export async function cancelar(id) {
   return cancelada;
 }
 
+// H2 — o voluntário confirma que buscou a doação.
+// Só uma doação aceita pode ser coletada (decisão 5); confirmar de novo é
+// recusado, para não sobrescrever o horário da primeira coleta (decisão 7).
+export async function confirmarColeta(id, voluntario) {
+  const nome = semEspacos(voluntario);
+  if (!nome) {
+    throw new Error('informe o nome do voluntário que buscou a doação');
+  }
+
+  const doacao = await repo.buscarPorId(id);
+
+  if (!doacao) {
+    throw new Error('doação não encontrada');
+  }
+  if (doacao.status === 'coletada') {
+    throw new Error('a coleta desta doação já foi confirmada');
+  }
+  if (doacao.status !== 'aceita') {
+    throw new Error('a doação ainda não foi aceita por uma ONG: não há coleta para confirmar');
+  }
+
+  const coletada = await repo.confirmarColeta(id, nome);
+  if (!coletada) {
+    throw new Error('a coleta desta doação já foi confirmada');
+  }
+  return coletada;
+}
+
 // H1 — o doador vê as doações que publicou e a situação de cada uma.
 export async function listarDoDoador(doador) {
   const nome = semEspacos(doador);

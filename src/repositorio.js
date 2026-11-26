@@ -70,3 +70,15 @@ export async function listarAceitas() {
 
   return rows;
 }
+
+export async function listarDoDoador(doador) {
+  const { rows } = await query(
+    `SELECT id, tipo, quantidade, validade, status, ong, doador, criada_em, aceita_em
+     FROM doacoes
+     WHERE lower(doador) = lower($1)
+     ORDER BY criada_em DESC, id DESC`,
+    [doador]
+  );
+
+  return rows;
+}

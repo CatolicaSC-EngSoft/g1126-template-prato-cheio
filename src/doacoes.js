@@ -87,6 +87,15 @@ export async function cancelar(id) {
   return cancelada;
 }
 
+// H1 — o doador vê as doações que publicou e a situação de cada uma.
+export async function listarDoDoador(doador) {
+  const nome = semEspacos(doador);
+  if (!nome) {
+    throw new Error('informe o doador (nome do estabelecimento)');
+  }
+  return repo.listarDoDoador(nome);
+}
+
 export async function listarHistorico() {
   return repo.listarAceitas();
 }

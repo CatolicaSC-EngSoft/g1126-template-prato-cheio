@@ -52,6 +52,11 @@ Erro tratado:
 2. Em "Sou uma ONG", com o nome `Casa Esperança`, clique em "Reservar para coleta" no pão // aviso "reservada para Casa Esperança".
 3. Volte a "Sou um estabelecimento" // o nome da padaria continua preenchido e o pão aparece como "Aceita por Casa Esperança em …".
 
+**H2 · Coleta confirmada**
+1. Em "Sou voluntário", digite `Rui` em "Seu nome" e `Casa Esperança` em "ONG", e toque em "Ver doações para buscar" // o pão da Padaria Pão Bom aparece na lista.
+2. Toque em "Confirmei a coleta" // aviso "Coleta de "Pão francês" confirmada por Rui." e o pão sai da lista.
+3. Volte a "Sou um estabelecimento" // o pão aparece como "Coletada para Casa Esperança em …", com o horário da confirmação.
+
 ## Testado por
 
 Outro integrante executou este roteiro sem ajuda: **Yuri**, em **19/11**.

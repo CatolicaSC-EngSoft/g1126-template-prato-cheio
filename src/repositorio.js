@@ -87,6 +87,18 @@ export async function confirmarColeta(id, voluntario) {
   return rows[0];
 }
 
+export async function listarAceitasPelaOng(ong) {
+  const { rows } = await query(
+    `SELECT * FROM doacoes
+     WHERE status = '${STATUS.ACEITA}'
+       AND lower(ong) = lower($1)
+     ORDER BY aceita_em`,
+    [ong]
+  );
+
+  return rows;
+}
+
 export async function listarDoDoador(doador) {
   const { rows } = await query(
     `SELECT id, tipo, quantidade, validade, status, ong, doador, criada_em, aceita_em, coletada_em

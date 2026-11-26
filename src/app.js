@@ -42,6 +42,14 @@ export function criarApp() {
     }
   });
 
+  app.get('/api/ongs/:ong/doacoes', async (req, res) => {
+    try {
+      res.json(await doacoes.listarAceitasPelaOng(req.params.ong));
+    } catch (erro) {
+      res.status(400).json({ erro: erro.message });
+    }
+  });
+
   app.get('/api/doadores/:doador/doacoes', async (req, res) => {
     try {
       res.json(await doacoes.listarDoDoador(req.params.doador));

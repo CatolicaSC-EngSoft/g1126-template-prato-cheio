@@ -26,7 +26,12 @@ export async function criarDoacao(dados) {
   if (validade <= hoje()) {
     throw new Error('a validade precisa ser uma data futura');
   }
-  return repo.inserir({ tipo, quantidade, validade });
+  // H1 — CA3: sem doador a doação não tem a quem pertencer.
+  const doador = semEspacos(dados.doador);
+  if (!doador) {
+    throw new Error('informe o doador (nome do estabelecimento) para publicar a doação');
+  }
+  return repo.inserir({ tipo, quantidade, validade, doador });
 }
  
 // História zero — "uma ONG vê as doações disponíveis".

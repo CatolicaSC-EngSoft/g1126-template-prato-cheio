@@ -12,6 +12,12 @@
   <p class="subtitulo">Publique os alimentos que sobraram para que uma ONG possa reservá-los.</p>
  
   <fieldset>
+    <legend>Seu estabelecimento</legend>
+    <label for="doador">Nome do estabelecimento</label>
+    <input id="doador" placeholder="Ex.: Padaria Pão Bom" autocomplete="organization">
+  </fieldset>
+
+  <fieldset>
     <legend>Nova doação</legend>
     <label for="tipo">Tipo de alimento</label>
     <input id="tipo" placeholder="Ex.: sopa, pão, frutas">
@@ -62,15 +68,22 @@
       }
     }
  
+    const campoDoador = document.getElementById('doador');
+    try { campoDoador.value = localStorage.getItem('pratocheio.doador') || ''; } catch {}
+    campoDoador.addEventListener('change', () => {
+      try { localStorage.setItem('pratocheio.doador', campoDoador.value.trim()); } catch {}
+    });
+
     document.getElementById('publicar').onclick = async () => {
+      const doador = campoDoador.value;
       const tipo = document.getElementById('tipo').value;
       const quantidade = document.getElementById('quantidade').value;
       const validade = document.getElementById('validade').value;
- 
+
       const res = await fetch('/api/doacoes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tipo, quantidade, validade })
+        body: JSON.stringify({ doador, tipo, quantidade, validade })
       });
       const corpo = await res.json();
  

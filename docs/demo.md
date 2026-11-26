@@ -45,6 +45,13 @@ Erro tratado:
 3. preencha os campos da doação (tipo de alimento -> feijoada // quantidade -> deixe vazio) e preencha a data com valor necessariamente futuro // os campos ficam preenchidos, menos quantidade
 4. Clique em "Publicar doação" // cadastro é recusado e aparece um erro: "tipo, quantidade e validade são obrigatórios"
 
+## Passos novos do Trabalho 3 (no navegador do celular)
+
+**H1 · Minhas doações**
+1. Em "Sou um estabelecimento", digite `Padaria Pão Bom` em "Nome do estabelecimento" e publique `Pão francês` / `40 unidades` / validade amanhã // a doação aparece em "Minhas doações" como "Disponível, aguardando uma ONG".
+2. Em "Sou uma ONG", com o nome `Casa Esperança`, clique em "Reservar para coleta" no pão // aviso "reservada para Casa Esperança".
+3. Volte a "Sou um estabelecimento" // o nome da padaria continua preenchido e o pão aparece como "Aceita por Casa Esperança em …".
+
 ## Testado por
 
 Outro integrante executou este roteiro sem ajuda: **Yuri**, em **19/11**.

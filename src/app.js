@@ -33,7 +33,15 @@ export function criarApp() {
     res.status(400).json({ erro: erro.message });
   }
 });
- 
+
+  app.get('/api/doadores/:doador/doacoes', async (req, res) => {
+    try {
+      res.json(await doacoes.listarDoDoador(req.params.doador));
+    } catch (erro) {
+      res.status(400).json({ erro: erro.message });
+    }
+  });
+
   app.post('/api/doacoes/:id/aceitar', async (req, res) => {
     try {
       res.json(await doacoes.aceitar(req.params.id, req.body?.ong ?? 'ONG'));

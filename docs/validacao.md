@@ -21,6 +21,9 @@ Copie aqui os critérios de aceite do seu `docs/analise.md` e marque um por um. 
 | 13 | **H1 · CA1.** Dado que a "Padaria Pão Bom" publicou duas doações e a "Casa Esperança" aceitou uma delas, quando a padaria consulta as suas doações, então vê as duas: uma disponível e outra aceita por Casa Esperança. | atende | `tests/minhas-doacoes.test.js`: "mostra ao doador as duas doações, uma disponível e outra aceita pela ONG"; demo, H1 passos 1 a 3 |
 | 14 | **H1 · CA2.** Dado que outro doador publicou uma doação, quando a "Padaria Pão Bom" consulta as suas, então essa doação não aparece. | atende | `tests/minhas-doacoes.test.js`: "não mostra ao doador as doações de outro doador" |
 | 15 | **H1 · CA3.** Dado que o doador não é informado na publicação, quando a doação é enviada, então ela é recusada com uma mensagem clara e nada é gravado. | atende | `tests/minhas-doacoes.test.js`: "recusa a publicação sem doador e não grava nada" e "recusa doador preenchido só com espaços" |
+| 16 | **H2 · CA1.** Dado que a "Casa Esperança" aceitou uma doação, quando o voluntário "Rui" confirma a coleta, então ela passa a coletada, com o nome do voluntário e o horário da coleta. | atende | `tests/coleta.test.js`: "confirma a coleta de uma doação aceita, com o voluntário e o horário"; demo, H2 passos 1 e 2 |
+| 17 | **H2 · CA2.** Dado que a doação ainda está disponível, quando alguém tenta confirmar a coleta, então a confirmação é recusada com mensagem e a doação não muda. | atende | `tests/coleta.test.js`: "recusa confirmar a coleta de uma doação ainda disponível e não muda a doação"; inversão de regra registrada no PR da H2 |
+| 18 | **H2 · CA3.** Dado que a doação foi coletada, quando o doador consulta as suas doações (H1), então ela aparece como coletada. | atende | `tests/coleta.test.js`: "a doação coletada aparece como coletada para o doador"; demo, H2 passo 3 |
 
 ## Critérios que não atendem - por quê
 

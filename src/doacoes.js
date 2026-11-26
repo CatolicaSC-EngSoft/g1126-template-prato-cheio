@@ -115,6 +115,14 @@ export async function confirmarColeta(id, voluntario) {
   return coletada;
 }
 
+export async function listarAceitasPelaOng(ong) {
+  const nome = semEspacos(ong);
+  if (!nome) {
+    throw new Error('informe o nome da ONG');
+  }
+  return repo.listarAceitasPelaOng(nome);
+}
+
 // H1 — o doador vê as doações que publicou e a situação de cada uma.
 export async function listarDoDoador(doador) {
   const nome = semEspacos(doador);

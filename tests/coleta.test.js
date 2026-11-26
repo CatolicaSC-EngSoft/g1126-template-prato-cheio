@@ -104,6 +104,21 @@ describe('H2 · o voluntário confirma a coleta', () => {
     expect(res.body[0].voluntario).toBeUndefined();
   });
 
+  it('lista para o voluntário só as doações aceitas pela ONG dele e ainda não coletadas', async () => {
+    const daCasa = await publicarEAceitar();
+    const jaColetada = await publicarEAceitar();
+    await confirmarColeta(jaColetada.id, 'Rui');
+    const deOutra = await publicar();
+    await request(app).post(`/api/doacoes/${deOutra.id}/aceitar`).send({ ong: 'Cozinha Solidária' });
+    await publicar();
+
+    const res = await request(app).get(`/api/ongs/${encodeURIComponent('Casa Esperança')}/doacoes`);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveLength(1);
+    expect(res.body[0].id).toBe(daCasa.id);
+  });
+
   it('recusa confirmar a coleta de uma doação que não existe', async () => {
     const res = await confirmarColeta(9999, 'Rui');
 

@@ -49,6 +49,7 @@
     function situacao(d) {
       if (d.status === 'disponivel') return 'Disponível, aguardando uma ONG';
       if (d.status === 'aceita') return `Aceita por ${d.ong} em ${dataHora(d.aceita_em)}`;
+      if (d.status === 'coletada') return `Coletada para ${d.ong} em ${dataHora(d.coletada_em)}`;
       if (d.status === 'cancelada') return 'Cancelada';
       return d.status;
     }

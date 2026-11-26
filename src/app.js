@@ -34,6 +34,14 @@ export function criarApp() {
   }
 });
 
+  app.post('/api/doacoes/:id/coleta', async (req, res) => {
+    try {
+      res.json(await doacoes.confirmarColeta(req.params.id, req.body?.voluntario));
+    } catch (erro) {
+      res.status(400).json({ erro: erro.message });
+    }
+  });
+
   app.get('/api/doadores/:doador/doacoes', async (req, res) => {
     try {
       res.json(await doacoes.listarDoDoador(req.params.doador));

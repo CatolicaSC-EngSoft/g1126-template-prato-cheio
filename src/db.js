@@ -149,6 +149,18 @@ export async function migrar() {
       ALTER COLUMN criada_em SET DEFAULT NOW()
     `);
 
+    await banco.query(`
+      ALTER TABLE doacoes
+      ADD COLUMN IF NOT EXISTS doador TEXT
+    `);
+
+    // Doações publicadas antes do H1 (decisão 6 do docs/projeto.md).
+    await banco.query(`
+      UPDATE doacoes
+      SET doador = 'Doador não identificado'
+      WHERE doador IS NULL
+    `);
+
     return;
   }
 
@@ -163,7 +175,8 @@ export async function migrar() {
       status TEXT NOT NULL DEFAULT 'disponivel',
       ong TEXT,
       criada_em TEXT NOT NULL DEFAULT (datetime('now')),
-      aceita_em TEXT
+      aceita_em TEXT,
+      doador TEXT
     )
   `);
 }
